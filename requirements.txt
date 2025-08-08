@@ -1,0 +1,20 @@
+# Google Drive to YouTube Uploader Requirements
+# Install with: pip install -r requirements.txt
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Google API dependencies
+google-api-python-client>=2.100.0
+google-auth>=2.20.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=1.0.0
+
+# HTTP requests
+requests>=2.31.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Optional: For CSV export functionality
+# pandas>=2.0.0
