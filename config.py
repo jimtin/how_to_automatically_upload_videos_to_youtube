@@ -6,6 +6,7 @@ Handles environment variables and configuration validation
 
 import os
 import sys
+import re
 from typing import List, Tuple, Dict
 from dotenv import load_dotenv
 
@@ -13,12 +14,52 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # =============================================================================
+# UTILITY FUNCTIONS
+# =============================================================================
+
+def extract_folder_id_from_url(folder_input: str) -> str:
+    """
+    Extract Google Drive folder ID from URL or return the input if it's already an ID
+    
+    Supports URLs like:
+    - https://drive.google.com/drive/folders/1ABC123xyz?usp=sharing
+    - https://drive.google.com/drive/folders/1ABC123xyz
+    - https://drive.google.com/drive/u/0/folders/1ABC123xyz
+    
+    Args:
+        folder_input: Either a folder ID or a Google Drive folder URL
+        
+    Returns:
+        The extracted folder ID
+    """
+    if not folder_input:
+        return ""
+    
+    # If it's already a folder ID (not a URL), return as-is
+    if not folder_input.startswith("http"):
+        return folder_input.strip()
+    
+    # Extract folder ID from various Google Drive URL formats
+    patterns = [
+        r'/folders/([a-zA-Z0-9_-]+)',  # Standard folder URL
+        r'id=([a-zA-Z0-9_-]+)',        # Alternative format
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, folder_input)
+        if match:
+            return match.group(1)
+    
+    # If no pattern matches, return the original input
+    return folder_input.strip()
+
+# =============================================================================
 # CONFIGURATION FROM ENVIRONMENT
 # =============================================================================
 
 CONFIG = {
     # Google Drive Settings
-    "GDRIVE_FOLDER_ID": os.getenv("GDRIVE_FOLDER_ID", ""),
+    "GDRIVE_FOLDER_ID": extract_folder_id_from_url(os.getenv("GDRIVE_FOLDER_ID", "")),
     "GDRIVE_CREDENTIALS_FILE": os.getenv("GDRIVE_CREDENTIALS_FILE", "gdrive_credentials.json"),
     "GDRIVE_TOKEN_FILE": os.getenv("GDRIVE_TOKEN_FILE", "gdrive_token.pickle"),
     "GDRIVE_SCOPES": ["https://www.googleapis.com/auth/drive.readonly"],

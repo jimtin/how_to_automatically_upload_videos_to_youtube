@@ -14,7 +14,7 @@ def create_env_template():
 # ==== REQUIRED SETTINGS ====
 
 # Google Drive folder ID to monitor for videos
-# Find this in the URL: https://drive.google.com/drive/folders/[FOLDER_ID]
+# You can use either just the folder ID or the full URL
 GDRIVE_FOLDER_ID=
 
 # ==== GOOGLE CREDENTIALS ====
@@ -133,9 +133,10 @@ def setup_wizard():
     
     # Google Drive Folder ID
     print("\nGoogle Drive Configuration:")
-    print("  Find folder ID in the URL when viewing the folder")
-    print("  Example: https://drive.google.com/drive/folders/[FOLDER_ID]")
-    folder_id = input("  Enter folder ID: ").strip()
+    print("  You can provide either:")
+    print("    - Just the folder ID: 1ABC123xyz")
+    print("    - Or the full URL: https://drive.google.com/drive/folders/1ABC123xyz")
+    folder_id = input("  Enter folder ID or URL: ").strip()
     if folder_id:
         env_content.append(f"GDRIVE_FOLDER_ID={folder_id}")
     else:
